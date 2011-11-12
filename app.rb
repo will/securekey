@@ -21,15 +21,9 @@ class App < Sinatra::Base
     end
   end
 
-=begin
-  # sso landing page
   get "/" do
-    #sinatra doesn't keep the cookie during the redirect
-    halt 403 unless session[:heroku_sso]
-    response.set_cookie('heroku-nav-data', value: session[:heroku_sso])
     haml :index
   end
-=end
 
   # sso sign in
   get "/heroku/resources/:id" do
