@@ -1,2 +1,2 @@
-require './app'
+require './app/web'
 run App

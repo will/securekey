@@ -1,7 +1,5 @@
-require 'bundler'
-Bundler.require
+require './secure_key'
 require 'sinatra/base'
-require './env'
 
 class App < Sinatra::Base
   use Rack::Session::Cookie, secret: ENV['SSO_SALT']

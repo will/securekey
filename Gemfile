@@ -6,3 +6,7 @@ gem 'thin'
 gem 'sequel'
 gem 'pg'
 
+group :test do
+  gem 'rspec'
+end
+
