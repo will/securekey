@@ -51,8 +51,13 @@ class App < Sinatra::Base
   # deprovision
   delete '/heroku/resources/:id' do
     protected!
-    User[params[:id].to_i].destroy
-    "ok"
+    u = User[params[:id].to_i]
+    if u
+      u.destroy
+      "ok"
+    else
+      status 404
+    end
   end
 
   # plan change
