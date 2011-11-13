@@ -43,12 +43,13 @@ class App < Sinatra::Base
   post '/heroku/resources' do
     protected!
     params = JSON.parse(request.body.read)
-    u = User.create callback_url: params['callback_url'],
-                       heroku_id: params['heroku_id'],
-                            plan: params['plan']
+    u = User.create logplex_token: params['logplex_token'],
+                     callback_url: params['callback_url'],
+                        heroku_id: params['heroku_id'],
+                             plan: params['plan']
 
     status 201
-    {id: u.id, config: {'SECURE_KEY' => 'abc', 'SECURE_KEY_OLD' => 'abc'}}.to_json
+    {id: u.id, config: {'SECURE_KEY' => SecureKey.generate, 'SECURE_KEY_OLD' => ''}}.to_json
   end
 
   # deprovision
