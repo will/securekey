@@ -44,7 +44,10 @@ class App < Sinatra::Base
     protected!
     params = JSON.parse(request.body.read)
     p params
-    u = User.create(params)
+    u = User.create callback_url: params[:callback_url],
+                       heroku_id: params[:heroku_id],
+                            plan: params[:plan]
+
     status 201
     {id: u.id, config: {'SECURE_KEY' => 'abc', 'SECURE_KEY_OLD' => 'abc'}}.to_json
   end
