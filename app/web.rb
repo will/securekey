@@ -2,6 +2,7 @@ require './app/secure_key'
 require 'sinatra/base'
 
 class App < Sinatra::Base
+  set :views, './views'
   use Rack::Session::Cookie, secret: ENV['SSO_SALT']
 
   helpers do
