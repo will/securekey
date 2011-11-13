@@ -1,4 +1,4 @@
-require './secure_key'
+require './app/secure_key'
 require 'sinatra/base'
 
 class App < Sinatra::Base
@@ -41,16 +41,17 @@ class App < Sinatra::Base
   # provision
   post '/heroku/resources' do
     protected!
-    #u = User.create()
-    #{id: u.id, config: {"MYADDON_URL" => 'http://user.yourapp.com'}}.to_json
+    #params = JSON.parse(request.body.read)
+    p params
+    u = User.create(params)
     status 201
-    {id: 1, config: {"SECURE_KEY" => 'abc', 'SECURE_KEY_OLD' => 'abc'}}.to_json
+    {id: u.id, config: {'SECURE_KEY' => 'abc', 'SECURE_KEY_OLD' => 'abc'}}.to_json
   end
 
   # deprovision
   delete '/heroku/resources/:id' do
     protected!
-    #User.get(params[:id]).destroy
+    User[params[:id].to_i].destroy
     "ok"
   end
 

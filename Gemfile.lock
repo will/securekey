@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/bmabey/database_cleaner.git
+  revision: ab066b1985108f4582194f0a71a73854e979de5b
+  specs:
+    database_cleaner (0.6.7)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -33,6 +39,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  database_cleaner!
   haml
   json
   pg
