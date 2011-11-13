@@ -1,18 +1,22 @@
-## `kensa create my_addon --template sinatra`
+## SecureKey
 
-this repository is a sinatra template application for use with the 
-Heroku <a href="http://github.com/heroku/kensa">kensa</a> gem
+Automatic and graceful secure key rotation as a service (AaGSKRaaS)
 
-clone it via:
+    $ heroku addons:add securekey
+    -----> Adding securekey to will... done, v216 (free)
 
-    > gem install kensa
-    > kensa create my_addon --template sinatra
-    > cd my_addon
-    > bundle install
-    > foreman start
+    $ heroku config -s | grep SECURE_KEY
+    SECURE_KEY=59b26bion3ow0o46hkw8laij99sm4gxe766q5iztumy7pz6o2m
+    SECURE_KEY_OLD=
 
-In a new window: 
+    ...time passes...
 
-    > kensa sso 1
+    $ heroku config -s | grep SECURE_KEY
+    SECURE_KEY=4pndhwz8dk57la2fqz0rdakseofsnzqbuz8a0vcwirjkpypcb7
+    SECURE_KEY_OLD=59b26bion3ow0o46hkw8laij99sm4gxe766q5iztumy7pz6o2m
 
-And you should be in a Heroku Single Sign On sesion for your brand new addon! 
+    ...time passes...
+
+    $ heroku config -s | grep SECURE_KEY
+    SECURE_KEY=5xhuqknssevprev03qivap4d4se4dx5xardk95y6enz7uru7eo
+    SECURE_KEY_OLD=4pndhwz8dk57la2fqz0rdakseofsnzqbuz8a0vcwirjkpypcb7
