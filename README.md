@@ -1,6 +1,8 @@
-## SecureKey
+# SecureKey
 
 Automatic and graceful secure key rotation as a service (AaGSKRaaS)
+
+## Usage
 
     $ heroku addons:add securekey
     -----> Adding securekey to will... done, v216 (free)
