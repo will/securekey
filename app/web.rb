@@ -1,9 +1,11 @@
 require './app/secure_key'
 require 'sinatra/base'
+require 'json'
+require 'rdiscount'
 
 class App < Sinatra::Base
-  set :views, './views'
   use Rack::Session::Cookie, secret: ENV['SSO_SALT']
+  enable :inline_templates
 
   helpers do
     def protected!
@@ -21,7 +23,7 @@ class App < Sinatra::Base
   end
 
   get "/" do
-    haml :index
+    markdown File.read('./README.md'), :layout_engine => :erb
   end
 
   # sso sign in
@@ -70,3 +72,16 @@ class App < Sinatra::Base
     "ok"
   end
 end
+
+__END__
+
+@@ layout
+<!DOCTYPE>
+<html>
+<head><title>SecureKey</title>
+<link rel="stylesheet" type="text/css" href="http://kevinburke.bitbucket.org/markdowncss/markdown.css">
+</head>
+<body>
+<%= yield %>
+</body>
+</html>

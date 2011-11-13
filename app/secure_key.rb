@@ -1,6 +1,5 @@
 require 'bundler'
 Bundler.require
-require './env'
 require 'sequel'
 require 'securerandom'
 
