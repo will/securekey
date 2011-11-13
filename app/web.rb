@@ -48,6 +48,7 @@ class App < Sinatra::Base
                        heroku_id: params[:heroku_id],
                             plan: params[:plan]
 
+    p user
     status 201
     {id: u.id, config: {'SECURE_KEY' => 'abc', 'SECURE_KEY_OLD' => 'abc'}}.to_json
   end
