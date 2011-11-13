@@ -42,7 +42,7 @@ class App < Sinatra::Base
   # provision
   post '/heroku/resources' do
     protected!
-    #params = JSON.parse(request.body.read)
+    params = JSON.parse(request.body.read)
     p params
     u = User.create(params)
     status 201
