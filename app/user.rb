@@ -14,6 +14,7 @@ class User < Sequel::Model
       :content_type => :json,
       :accept       => :json
     )
+    update(:rotated_at => Time.now)
   end
 
   def get_current_key

@@ -20,19 +20,24 @@ describe User, '#rotate_keys!' do
   before do
     ENV['HEROKU_USERNAME'] = 'huser'
     ENV['HEROKU_PASSWORD'] = 'hpass'
-  end
-
-  it 'sets a new key and rotates the old one' do
     body = {"config" => {"SECURE_KEY" => 'abc123'}}.to_json
     stub_request(:get, url).to_return(body: body)
 
-    SecureKey.should_receive(:generate).and_return('new789')
+    SecureKey.stub(:generate).and_return('new789')
     body = {'config' => {"SECURE_KEY" => 'new789', "SECURE_KEY_OLD" => 'abc123'}}.to_json
-    stubreq = stub_request(:put, url).with(body: body)
-
-    u.rotate_keys!
-
-    stubreq.should have_been_requested
+    @stubreq = stub_request(:put, url).with(body: body)
   end
 
+  it 'sets a new key and rotates the old one' do
+    SecureKey.should_receive(:generate).and_return('new789')
+    u.rotate_keys!
+    @stubreq.should have_been_requested
+  end
+
+  it 'sets and saves rotated_at' do
+    u.rotated_at.should be_nil
+    u.rotate_keys!
+    u.reload
+    u.rotated_at.should be_within(1).of(Time.now)
+  end
 end
