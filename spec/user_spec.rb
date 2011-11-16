@@ -13,6 +13,65 @@ describe User, 'create' do
   end
 end
 
+describe User, ".rotateable" do
+  def subject
+    #puts User.rotateable.sql
+    User.rotateable.all.map(&:id)
+  end
+
+  before do
+    @d1 = User.create(plan: 'daily',       rotated_at: Time.new(2011,2,1) ).id
+    @d2 = User.create(plan: 'daily',       rotated_at: Time.new(2011,2,2) ).id
+    @w1 = User.create(plan: 'weekly',      rotated_at: Time.new(2011,2,1) ).id
+    @w2 = User.create(plan: 'weekly',      rotated_at: Time.new(2011,2,8) ).id
+    @f1 = User.create(plan: 'fortnightly', rotated_at: Time.new(2011,2,1) ).id
+    @f2 = User.create(plan: 'fortnightly', rotated_at: Time.new(2011,2,15)).id
+  end
+
+  def on_day(day, *users)
+    Timecop.freeze(2011,2,day)
+    subject.should == users
+  end
+
+  after { Timecop.return }
+
+  it 'finds the right ones' do
+     Timecop.freeze(1999,7,14)
+     subject.should =~ []
+
+     on_day  1
+     on_day  2, @d1
+     on_day  3, @d1, @d2
+     on_day  4, @d1, @d2
+     on_day  5, @d1, @d2
+     on_day  6, @d1, @d2
+     on_day  7, @d1, @d2
+     on_day  8, @d1, @d2, @w1
+     on_day  9, @d1, @d2, @w1
+     on_day 10, @d1, @d2, @w1
+     on_day 11, @d1, @d2, @w1
+     on_day 12, @d1, @d2, @w1
+     on_day 13, @d1, @d2, @w1
+     on_day 14, @d1, @d2, @w1
+     on_day 15, @d1, @d2, @w1, @w2, @f1
+     on_day 16, @d1, @d2, @w1, @w2, @f1
+     on_day 17, @d1, @d2, @w1, @w2, @f1
+     on_day 18, @d1, @d2, @w1, @w2, @f1
+     on_day 19, @d1, @d2, @w1, @w2, @f1
+     on_day 20, @d1, @d2, @w1, @w2, @f1
+     on_day 21, @d1, @d2, @w1, @w2, @f1
+     on_day 22, @d1, @d2, @w1, @w2, @f1
+     on_day 23, @d1, @d2, @w1, @w2, @f1
+     on_day 24, @d1, @d2, @w1, @w2, @f1
+     on_day 25, @d1, @d2, @w1, @w2, @f1
+     on_day 25, @d1, @d2, @w1, @w2, @f1
+     on_day 26, @d1, @d2, @w1, @w2, @f1
+     on_day 27, @d1, @d2, @w1, @w2, @f1
+     on_day 28, @d1, @d2, @w1, @w2, @f1
+     on_day 29, @d1, @d2, @w1, @w2, @f1, @f2
+  end
+end
+
 describe User, '#rotate_keys!' do
   let(:u) { User.new callback_url: 'https://callback.url/path' }
   let(:url) { "https://huser:hpass@callback.url/path" }

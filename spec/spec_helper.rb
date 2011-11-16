@@ -2,6 +2,7 @@ require 'rspec'
 require './app/secure_key'
 require 'database_cleaner'
 require 'webmock/rspec'
+require 'timecop'
 WebMock.disable_net_connect!
 
 RSpec.configure do |config|

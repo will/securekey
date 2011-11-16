@@ -2,6 +2,22 @@ require 'rest_client'
 require 'json'
 
 class User < Sequel::Model
+  DAILY = 24*60*60
+  WEEKLY = DAILY * 7
+  FORTNIGHTLY = WEEKLY * 2
+
+  def_dataset_method :rotateable do
+    with_sql(
+      "SELECT * FROM users WHERE
+        (plan='daily' AND rotated_at <= ?) OR
+        (plan='weekly' AND rotated_at <= ?) OR
+        (plan='fortnightly' AND rotated_at <= ?)",
+      Time.now - DAILY,
+      Time.now - WEEKLY,
+      Time.now - FORTNIGHTLY
+    )
+  end
+
   def rotate_keys!
     write_keys(SecureKey.generate, get_current_key)
   end
