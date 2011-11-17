@@ -1,11 +1,13 @@
 require './app/secure_key'
 desc 'rotate all'
 task :rotate do
-  User.all.each do |u|
+  User.rotatable.each do |u|
     begin
       puts "rotating #{u.id}: #{u.heroku_id}"
       u.rotate_keys!
-    rescue
+      puts "success!"
+    rescue => e
+      puts "failed #{e.inspect}"
       next
     end
   end
