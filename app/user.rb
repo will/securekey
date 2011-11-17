@@ -2,7 +2,8 @@ require 'rest_client'
 require 'json'
 
 class User < Sequel::Model
-  DAILY = 24*60*60
+  #DAILY = 24*60*60
+  DAILY = 10*60
   WEEKLY = DAILY * 7
   FORTNIGHTLY = WEEKLY * 2
 
