@@ -30,7 +30,7 @@ into your repo, which is bad. Add this add-on, and never think about it again.
 
 You need to keep and accept the old key for a while, or your users will lose
 their sessions right away. My [patch to Rack::Cookie](https://github.com/rack/rack/pull/263)
-takes care of that for you
+takes care of that for you. A rails patch is coming soon.
 
 ## A Heroku add-on, running on Heroku, made with Heroku add-ons
 
