@@ -3,7 +3,7 @@ desc 'rotate all'
 task :rotate do
   User.rotatable.each do |u|
     begin
-      puts "rotating #{u.id}: #{u.heroku_id}"
+      puts "rotating #{u.id} (#{u.plan}): #{u.heroku_id}"
       u.rotate_keys!
       puts "success!"
     rescue => e
