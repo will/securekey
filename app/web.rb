@@ -47,11 +47,12 @@ class App < Sinatra::Base
     params = JSON.parse(request.body.read)
     u = User.create logplex_token: params['logplex_token'],
                      callback_url: params['callback_url'],
+                       rotated_at: Time.now,
                         heroku_id: params['heroku_id'],
                              plan: params['plan']
 
     status 201
-    {id: u.id, config: {'SECURE_KEY' => SecureKey.generate, 'SECURE_KEY_OLD' => ''}}.to_json
+    {id: u.id, config: {'SECURE_KEY' => SecureKey.generate, 'SECURE_KEY_OLD' => SecureKey.generate}}.to_json
   end
 
   # deprovision
