@@ -7,7 +7,7 @@ class User < Sequel::Model
   WEEKLY = DAILY * 7
   FORTNIGHTLY = WEEKLY * 2
 
-  def_dataset_method :rotateable do
+  def_dataset_method :rotatable do
     with_sql(
       "SELECT * FROM users WHERE
         (plan='daily' AND rotated_at <= ?) OR

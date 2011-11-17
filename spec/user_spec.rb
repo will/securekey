@@ -13,10 +13,10 @@ describe User, 'create' do
   end
 end
 
-describe User, ".rotateable" do
+describe User, ".rotatable" do
   def subject
-    #puts User.rotateable.sql
-    User.rotateable.all.map(&:id)
+    #puts User.rotatable.sql
+    User.rotatable.all.map(&:id)
   end
 
   before do
