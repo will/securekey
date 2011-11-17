@@ -69,7 +69,13 @@ class App < Sinatra::Base
   # plan change
   put '/heroku/resources/:id' do
     protected!
-    "ok"
+    body = JSON.parse(request.body.read)
+    u = User[params[:id].to_i]
+    if u && u.update(plan: body['plan'])
+      "ok"
+    else
+      status 404
+    end
   end
 end
 
