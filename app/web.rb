@@ -8,6 +8,10 @@ class App < Sinatra::Base
   enable :inline_templates
 
   helpers do
+    def refuse_provision(reason)
+      throw(:halt, [422, {:message => reason}.to_json])
+    end
+
     def protected!
       unless authorized?
         response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
@@ -45,6 +49,11 @@ class App < Sinatra::Base
   post '/heroku/resources' do
     protected!
     params = JSON.parse(request.body.read)
+
+    if params['plan'] == 'test'
+      refuse_provision("test plan deprecated, please use fortnightly")
+    end
+
     u = User.create logplex_token: params['logplex_token'],
                      callback_url: params['callback_url'],
                        rotated_at: Time.now,
