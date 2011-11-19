@@ -6,6 +6,7 @@ require 'rdiscount'
 class App < Sinatra::Base
   use Rack::Session::Cookie, secret: ENV['SSO_SALT']
   enable :inline_templates
+  set :environment, ENV['RACK_ENV']
 
   helpers do
     def refuse_provision(reason)
@@ -32,17 +33,18 @@ class App < Sinatra::Base
 
   # sso sign in
   get "/heroku/resources/:id" do
-    pre_token = params[:id] + ':' + ENV['SSO_SALT'] + ':' + params[:timestamp]
-    token = Digest::SHA1.hexdigest(pre_token).to_s
-    halt 403 if token != params[:token]
-    halt 403 if params[:timestamp].to_i < (Time.now - 2*60).to_i
+    halt 501
+    #pre_token = params[:id] + ':' + ENV['SSO_SALT'] + ':' + params[:timestamp]
+    #token = Digest::SHA1.hexdigest(pre_token).to_s
+    #halt 403 if token != params[:token]
+    #halt 403 if params[:timestamp].to_i < (Time.now - 2*60).to_i
 
-    account = true #User.get(params[:id])
-    halt 404 unless account
+    #account = true #User.get(params[:id])
+    #halt 404 unless account
 
-    session[:heroku_sso] = params['nav-data']
-    response.set_cookie('heroku-nav-data', value: params['nav-data'])
-    haml :index
+    #session[:heroku_sso] = params['nav-data']
+    #response.set_cookie('heroku-nav-data', value: params['nav-data'])
+    #haml :index
   end
 
   # provision
