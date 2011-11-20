@@ -62,6 +62,7 @@ class App < Sinatra::Base
                         heroku_id: params['heroku_id'],
                              plan: params['plan']
 
+    u.update_next_rotation_time!
     status 201
     {id: u.id, config: {'SECURE_KEY' => SecureKey.generate, 'SECURE_KEY_OLD' => SecureKey.generate}}.to_json
   end

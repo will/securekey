@@ -2,24 +2,13 @@ require 'rest_client'
 require 'json'
 
 class User < Sequel::Model
-  DAILY = 24*60*60
-  WEEKLY = DAILY * 7
-  FORTNIGHTLY = WEEKLY * 2
-
   def_dataset_method :rotatable do
-    with_sql(
-      "SELECT * FROM users WHERE
-        (plan='daily' AND rotated_at <= ?) OR
-        (plan='weekly' AND rotated_at <= ?) OR
-        (plan='fortnightly' AND rotated_at <= ?)",
-      Time.now - DAILY,
-      Time.now - WEEKLY,
-      Time.now - FORTNIGHTLY
-    )
+    filter{ next_rotation < Time.now }.or(:next_rotation => nil)
   end
 
   def rotate_keys!
     write_keys(SecureKey.generate, get_current_key)
+    update_next_rotation_time!
   end
 
   def write_keys(new_key, old_key)
@@ -30,7 +19,6 @@ class User < Sequel::Model
       :content_type => :json,
       :accept       => :json
     )
-    update(:rotated_at => Time.now)
   end
 
   def get_current_key
@@ -43,5 +31,17 @@ class User < Sequel::Model
     url.user = ENV["HEROKU_USERNAME"]
     url.password = ENV["HEROKU_PASSWORD"]
     return url.to_s
+  end
+
+  private
+
+  def update_next_rotation_time!
+    next_time = Time.now + case plan
+    when 'daily'       then 60*60*24
+    when 'weekly'      then 60*60*24*7
+    when 'fortnightly' then 60*60*24*14
+    else 60*60*24*28
+    end
+    update :next_rotation => next_time
   end
 end
