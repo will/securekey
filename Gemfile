@@ -9,7 +9,6 @@ gem 'rest-client'
 
 group :test do
   gem 'rspec'
-  gem 'database_cleaner'
   gem 'webmock'
   gem 'timecop'
 end

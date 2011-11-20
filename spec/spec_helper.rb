@@ -1,18 +1,15 @@
 require 'rspec'
 require './app/secure_key'
-require 'database_cleaner'
 require 'webmock/rspec'
 require 'timecop'
 WebMock.disable_net_connect!
 
 RSpec.configure do |config|
-  config.before(:suite) do
-    DatabaseCleaner[:sequel].strategy = :truncation
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
   config.before(:each) do
-    DatabaseCleaner[:Sequel].clean
+    db = Sequel::Model.db
+    (db.tables - [:schema_info, :schema_migrations]).each do |table|
+      db[table].truncate
+    end
   end
 end
 
