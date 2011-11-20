@@ -58,7 +58,6 @@ class App < Sinatra::Base
 
     u = User.create logplex_token: params['logplex_token'],
                      callback_url: params['callback_url'],
-                       rotated_at: Time.now,
                         heroku_id: params['heroku_id'],
                              plan: params['plan']
 

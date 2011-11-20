@@ -33,8 +33,6 @@ class User < Sequel::Model
     return url.to_s
   end
 
-  private
-
   def update_next_rotation_time!
     next_time = Time.now + case plan
     when 'daily'       then 60*60*24
