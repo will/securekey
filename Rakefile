@@ -11,8 +11,8 @@ task :rotate do
       puts "  failed #{e.inspect}"
       next
     end
-  puts 'finished'
   end
+  puts 'finished'
 end
 
 
