@@ -12,9 +12,9 @@ class User < Sequel::Model
   end
 
   def write_keys(new_key, old_key)
-   keys = {"SECURE_KEY" => new_key, "SECURE_KEY_OLD" => old_key}
+   keys = [new_key, old_key].join(',')
    RestClient.put(heroku_url, {
-        :config => keys
+        :value => keys
       }.to_json,
       :content_type => :json,
       :accept       => :json
@@ -23,7 +23,7 @@ class User < Sequel::Model
 
   def get_current_key
     response = JSON.parse(RestClient.get(heroku_url))
-    response['config']['SECURE_KEY']
+    response['value'].split(',').first
   end
 
   def heroku_url

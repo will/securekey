@@ -63,7 +63,7 @@ class App < Sinatra::Base
 
     u.update_next_rotation_time!
     status 201
-    {id: u.id, config: {'SECURE_KEY' => SecureKey.generate, 'SECURE_KEY_OLD' => SecureKey.generate}}.to_json
+    {id: u.id, value: [SecureKey.generate, SecureKey.generate].join(',')}.to_json
   end
 
   # deprovision
