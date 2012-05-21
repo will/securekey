@@ -11,6 +11,12 @@ describe User, 'create' do
     u.plan.should == 'daily'
     u.created_at.should_not be_nil
   end
+
+  it { }
+  it { }
+  it { }
+  it { }
+  it { }
 end
 
 describe User, ".rotatable" do
