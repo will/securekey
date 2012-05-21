@@ -52,7 +52,7 @@ class App < Sinatra::Base
     protected!
     params = JSON.parse(request.body.read)
 
-    if params['plan'] == 'test'
+    if params['plan'] == 'test' && ENV['HEROKU_USERNAME']=='securekey' # only production
       refuse_provision("test plan deprecated, please use fortnightly")
     end
 
