@@ -23,7 +23,7 @@ class User < Sequel::Model
 
   def get_current_key
     response = JSON.parse(RestClient.get(heroku_url))
-    response['value'].split(',').first
+    response['apps'].first['config'].first.last.split(',').first
   end
 
   def heroku_url
