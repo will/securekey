@@ -14,7 +14,8 @@ class User < Sequel::Model
   def write_keys(new_key, old_key)
    keys = [new_key, old_key].join(',')
    RestClient.put(heroku_url, {
-        :value => keys
+        :value => keys,
+        :config => {'KEY' => keys}
       }.to_json,
       :content_type => :json,
       :accept       => :json
