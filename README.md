@@ -31,6 +31,6 @@ takes care of that for you. A rails patch is coming soon.
 
 ## A Heroku add-on, running on Heroku, made with Heroku add-ons
 
-It currently uses the free shared postgres, pgbackups, and scheduler add-ons.
+It currently uses the free heroku-postgres dev plan, pgbackups, and scheduler add-ons.
 The code is over at [github.com/will/securekey](http://github.com/will/securekey).
 
