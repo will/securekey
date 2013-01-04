@@ -29,6 +29,25 @@ You need to keep and accept the old key for a while, or your users will lose
 their sessions right away. My [patch to Rack::Cookie](https://github.com/rack/rack/pull/263)
 takes care of that for you. A rails patch is coming soon.
 
+## Install
+
+Clone then run:
+
+    $ bundle install
+
+Next you'll want to make sure you've got a local database set up:
+
+
+Then you can create and migrate your database by running:
+
+    $ createdb secure_key
+    $ sequel -m db/ postgres:///secure_key
+
+
+Make sure tests pass by running:
+
+    $ bundle exec rake
+
 ## A Heroku add-on, running on Heroku, made with Heroku add-ons
 
 It currently uses the free heroku-postgres dev plan, pgbackups, and scheduler add-ons.
