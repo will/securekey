@@ -46,11 +46,12 @@ describe User, '#rotate_keys!' do
   before do
     ENV['HEROKU_USERNAME'] = 'huser'
     ENV['HEROKU_PASSWORD'] = 'hpass'
-    body = {"value" => 'abc123,ok321'}.to_json
+    body = {'apps' => [{"value" => 'abc123,ok321', 'config' => {"" => ""}}]}.to_json
     stub_request(:get, url).to_return(body: body)
-
-    SecureKey.stub(:generate).and_return('new789')
-    body = {'value' => 'new789,abc123'}.to_json
+    new_key = 'new789'
+    SecureKey.stub(:generate).and_return(new_key)
+    new_key = "#{new_key},"
+    body =  {'value' => new_key, 'config' => {'KEY' => new_key}}.to_json
     @stubreq = stub_request(:put, url).with(body: body)
   end
 
