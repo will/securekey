@@ -11,12 +11,6 @@ describe User, 'create' do
     u.plan.should == 'daily'
     u.created_at.should_not be_nil
   end
-
-  it { }
-  it { }
-  it { }
-  it { }
-  it { }
 end
 
 describe User, ".rotatable" do
@@ -47,12 +41,12 @@ describe User, '#rotate_keys!' do
     ENV['HEROKU_USERNAME'] = 'huser'
     ENV['HEROKU_PASSWORD'] = 'hpass'
     body = {'apps' => [{"value" => 'abc123,ok321', 'config' => {"" => ""}}]}.to_json
-    stub_request(:get, url).to_return(body: body)
+    stub_request(:get, "https://callback.url/path").with(basic_auth: ['huser', 'hpass']).to_return(body: body)
     new_key = 'new789'
     SecureKey.stub(:generate).and_return(new_key)
     new_key = "#{new_key},"
     body =  {'value' => new_key, 'config' => {'KEY' => new_key}}.to_json
-    @stubreq = stub_request(:put, url).with(body: body)
+    @stubreq = stub_request(:put, "https://callback.url/path").with(basic_auth: ['huser', 'hpass']).to_return(body: body)
   end
 
   it 'sets a new key and rotates the old one' do

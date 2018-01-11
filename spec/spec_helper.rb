@@ -4,6 +4,7 @@ require 'webmock/rspec'
 WebMock.disable_net_connect!
 
 RSpec.configure do |config|
+  config.expect_with(:rspec) { |c| c.syntax = :should }
   def clean!
     db = Sequel::Model.db
     (db.tables - [:schema_info, :schema_migrations]).each do |table|

@@ -2,6 +2,8 @@ require 'rest_client'
 require 'json'
 
 class User < Sequel::Model
+  plugin :def_dataset_method
+
   def_dataset_method :rotatable do
     filter{ next_rotation < Time.now }.or(:next_rotation => nil)
   end
