@@ -25,6 +25,10 @@ class App < Sinatra::Base
       @auth.provided? && @auth.basic? && @auth.credentials &&
       @auth.credentials == [ENV['HEROKU_USERNAME'], ENV['HEROKU_PASSWORD']]
     end
+
+    def config_key
+      ENV['ADDON_CONFIG_KEY'] || 'SECURE_KEY'
+    end
   end
 
   get "/" do
@@ -64,7 +68,7 @@ class App < Sinatra::Base
     u.update_next_rotation_time!
     status 201
     inital_keys = [SecureKey.generate, SecureKey.generate].join(',')
-    {id: u.id, value: inital_keys, config: {'KEY' => inital_keys} }.to_json
+    {id: u.id, value: inital_keys, config: {config_key => inital_keys} }.to_json
   end
 
   # deprovision
@@ -90,6 +94,7 @@ class App < Sinatra::Base
       status 404
     end
   end
+
 end
 
 __END__

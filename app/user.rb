@@ -16,8 +16,7 @@ class User < Sequel::Model
   def write_keys(new_key, old_key)
    keys = [new_key, old_key].join(',')
    RestClient.put(heroku_url, {
-        :value => keys,
-        :config => {'KEY' => keys}
+        :config => {config_key => keys}
       }.to_json,
       :content_type => :json,
       :accept       => :json
@@ -25,8 +24,9 @@ class User < Sequel::Model
   end
 
   def get_current_key
-    response = JSON.parse(RestClient.get(heroku_url))
-    response['apps'].first['config'].first.last.split(',').first
+    response_body = RestClient.get(heroku_url)
+    response = JSON.parse(response_body)
+    response['config'].first.last.split(',').first
   end
 
   def heroku_url
@@ -34,6 +34,10 @@ class User < Sequel::Model
     url.user = ENV["HEROKU_USERNAME"]
     url.password = ENV["HEROKU_PASSWORD"]
     return url.to_s
+  end
+
+  def config_key
+    ENV['ADDON_CONFIG_KEY'] || 'SECURE_KEY'
   end
 
   def update_next_rotation_time!
