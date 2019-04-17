@@ -1,56 +1,57 @@
-require 'spec_helper'
+require "spec_helper"
 
-describe User, 'create' do
-  it 'has default heroku things' do
-    User.count.should == 0
-    User.create heroku_id: 'app123',
-                plan: 'daily',
-                callback_url: 'https://blah',
-                logplex_token: 't.239d9f'
+describe User, "create" do
+  it "has default heroku things" do
+    expect(User.count).to eq(0)
+    User.create heroku_id: "app123",
+                plan: "daily",
+                callback_url: "https://blah",
+                logplex_token: "t.239d9f"
     u = User.first
-    u.plan.should == 'daily'
-    u.created_at.should_not be_nil
+    expect(u.plan).to eq("daily")
+    expect(u.created_at).to_not be_nil
   end
 end
 
 describe User, ".rotatable" do
   def subject
-    #puts User.rotatable.sql
+    # puts User.rotatable.sql
     User.rotatable.all.map(&:id)
   end
 
   before do
-    @yes1 = User.create(plan: 'daily',       next_rotation: Time.now - 100).id
-    @yes2 = User.create(plan: 'daily',       next_rotation: nil           ).id
-    @yes3 = User.create(plan: 'weekly',      next_rotation: Time.now - 200).id
-    @no1  = User.create(plan: 'weekly',      next_rotation: Time.now + 100).id
-    @no2  = User.create(plan: 'fortnightly', next_rotation: Time.now + 300).id
-    @no3  = User.create(plan: 'fortnightly', next_rotation: Time.now + 900).id
+    @yes1 = User.create(plan: "daily",       next_rotation: Time.now - 100).id
+    @yes2 = User.create(plan: "daily",       next_rotation: nil).id
+    @yes3 = User.create(plan: "weekly",      next_rotation: Time.now - 200).id
+    @no1  = User.create(plan: "weekly",      next_rotation: Time.now + 100).id
+    @no2  = User.create(plan: "fortnightly", next_rotation: Time.now + 300).id
+    @no3  = User.create(plan: "fortnightly", next_rotation: Time.now + 900).id
   end
 
-  it 'includes the users that need a rotation right now' do
+  it "includes the users that need a rotation right now" do
     subject.should =~ [@yes1, @yes2, @yes3]
   end
 end
 
-describe User, '#rotate_keys!' do
-  let(:u) { User.new callback_url: 'https://callback.url/path', :next_rotation => Time.now }
+describe User, "#rotate_keys!" do
+  let(:u) { User.new callback_url: "https://callback.url/path", next_rotation: Time.now }
   let(:url) { "https://huser:hpass@callback.url/path" }
 
   before do
-    ENV['HEROKU_USERNAME'] = 'huser'
-    ENV['HEROKU_PASSWORD'] = 'hpass'
-    body = {'config' => {"SECURE_KEY" => "abc123,ok321"}}.to_json
-    stub_request(:get, "https://callback.url/path").with(basic_auth: ['huser', 'hpass']).to_return(body: body)
-    new_key = 'new789'
-    SecureKey.stub(:generate).and_return(new_key)
+    ENV["HEROKU_USERNAME"] = "huser"
+    ENV["HEROKU_PASSWORD"] = "hpass"
+    body = {"config" => {"SECURE_KEY" => "abc123,ok321"}}.to_json
+    stub_request(:get, "https://callback.url/path").with(basic_auth: ["huser", "hpass"]).to_return(body: body)
+    new_key = "new789"
+    allow(SecureKey).to receive(:generate).and_return(new_key)
     new_key = "#{new_key},"
-    body =  {'value' => new_key, 'config' => {'SECURE_KEY' => new_key}}.to_json
-    @stubreq = stub_request(:put, "https://callback.url/path").with(basic_auth: ['huser', 'hpass']).to_return(body: body)
+    body =  {"value" => new_key, "config" => {"SECURE_KEY" => new_key}}.to_json
+
+    @stubreq = stub_request(:put, "https://callback.url/path").with(basic_auth: ["huser", "hpass"]).to_return(body: body)
   end
 
-  it 'sets a new key and rotates the old one' do
-    SecureKey.should_receive(:generate).and_return('new789')
+  it "sets a new key and rotates the old one" do
+    expect(SecureKey).to receive(:generate).and_return("new789")
     u.rotate_keys!
     @stubreq.should have_been_requested
   end
@@ -63,8 +64,8 @@ describe User, '#rotate_keys!' do
     u.next_rotation.should be_within(1).of(future_time)
   end
 
-  it { plan_time 'daily',       60*60*24 }
-  it { plan_time 'weekly',      60*60*24*7 }
-  it { plan_time 'fortnightly', 60*60*24*14 }
-  it { plan_time 'monthly',     60*60*24*28 }
+  it { plan_time "daily",       60 * 60 * 24 }
+  it { plan_time "weekly",      60 * 60 * 24 * 7 }
+  it { plan_time "fortnightly", 60 * 60 * 24 * 14 }
+  it { plan_time "monthly",     60 * 60 * 24 * 28 }
 end
