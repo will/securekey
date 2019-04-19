@@ -51,6 +51,7 @@ class App < Sinatra::Base
   post '/heroku/resources' do
     protected!
     params = JSON.parse(request.body.read)
+    p params if ENV['DEBUG']
 
     if params['plan'] == 'test' && ENV['HEROKU_USERNAME']=='securekey' # only production
       refuse_provision("test plan deprecated, please use fortnightly")
